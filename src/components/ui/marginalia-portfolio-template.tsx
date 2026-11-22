@@ -538,7 +538,7 @@ function qrMatrix(text: string): boolean[][] | null {
 const U = "https://images.unsplash.com/photo-"
 
 const DEFAULT_FONT =
-  "https://fonts.googleapis.com/css2?family=Caveat:wght@400;500;600;700&family=DM+Serif+Display:ital@0;1&family=Poppins:wght@300;400;500;600&display=swap"
+  "https://fonts.googleapis.com/css2?family=Patrick+Hand&family=Playfair+Display:ital,wght@0,400;0,500;1,400&family=Be+Vietnam+Pro:wght@300;400;500;600&display=swap"
 
 const DEFAULT_PROJECTS: MgnProject[] = [
   {
@@ -714,8 +714,8 @@ const CSS = `
 .mgn-root :where(a){color:inherit;text-decoration:none}
 .mgn-root :focus-visible{outline:2px dashed var(--mgn-pen);outline-offset:4px;border-radius:6px}
 
-.mgn-display{font-family:var(--mgn-display);font-weight:400;line-height:.92;letter-spacing:-.012em}
-.mgn-hand{font-family:var(--mgn-hand);color:var(--mgn-pen);font-weight:500;line-height:1.02}
+.mgn-display{font-family:var(--mgn-display);font-weight:400;line-height:1.02;letter-spacing:-.012em}
+.mgn-hand{font-family:var(--mgn-hand);color:var(--mgn-pen);font-weight:400;line-height:1.1}
 .mgn-p{font-size:clamp(13px,1.08cqi,16px);line-height:1.7;color:var(--fg)}
 .mgn-muted{color:var(--muted)}
 .mgn-h2{font-size:clamp(54px,8.6cqi,150px);margin:0;color:var(--fg)}
@@ -2400,9 +2400,9 @@ export default function MarginaliaPortfolioTemplate(props: MarginaliaPortfolioTe
     "--mgn-ink": colors.ink,
     "--mgn-pen": colors.pen,
     "--mgn-h": height,
-    "--mgn-display": fonts.display || "'DM Serif Display', 'Bodoni 72', Didot, Georgia, serif",
-    "--mgn-hand": fonts.hand || "Caveat, 'Bradley Hand', 'Segoe Print', 'Comic Sans MS', cursive",
-    "--mgn-body": fonts.body || "Poppins, ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif",
+    "--mgn-display": fonts.display || "'Playfair Display', 'Bodoni 72', Didot, Georgia, serif",
+    "--mgn-hand": fonts.hand || "'Patrick Hand', 'Bradley Hand', 'Segoe Print', 'Comic Sans MS', cursive",
+    "--mgn-body": fonts.body || "'Be Vietnam Pro', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif",
   } as React.CSSProperties
 
   const items = sheets.map((s) => ({ id: s.info.id, label: s.kind === "cases" ? projects[s.i].name : cap(s.info.label) }))

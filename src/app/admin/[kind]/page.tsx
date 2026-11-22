@@ -8,12 +8,12 @@ import type { Entry } from "@/lib/types";
 
 const KINDS = { projects: { kind: "project", label: "Dự án" }, games: { kind: "game", label: "Game" } } as const;
 
-type Props = { params: Promise<{ kind: string }>; searchParams: Promise<{ q?: string; status?: string }> };
+type Props = { params: Promise<{ kind: string }>; searchParams: Promise<{ q?: string; status?: string; saved?: string }> };
 
 export default async function Manage({ params, searchParams }: Props) {
   const cfg = KINDS[(await params).kind as keyof typeof KINDS];
   if (!cfg) notFound();
-  const { q = "", status = "" } = await searchParams;
+  const { q = "", status = "", saved = "" } = await searchParams;
 
   const sb = await supabaseServer();
   let query = sb.from("entries").select("*").eq("kind", cfg.kind).order("created_at", { ascending: false });
@@ -30,6 +30,7 @@ export default async function Manage({ params, searchParams }: Props) {
     <div className="grid gap-12 lg:grid-cols-[1fr_22rem]">
       <section>
         <h1 className="text-3xl font-semibold">{cfg.label}</h1>
+        {saved && <p role="status" className="mt-4 rounded-md border border-signal px-3 py-2 font-display text-sm text-signal">Đã lưu dưới dạng bản nháp. Bấm "Xuất bản" để hiện trên trang chủ.</p>}
         <form className="mt-6 flex gap-2" role="search">
           <input name="q" defaultValue={q} placeholder="Tìm theo tên" className="field" />
           <select name="status" defaultValue={status} className="field !w-40">
@@ -63,7 +64,7 @@ export default async function Manage({ params, searchParams }: Props) {
       </section>
       <div>
         <h2 className="mb-3 text-xl font-semibold">Thêm {cfg.label.toLowerCase()}</h2>
-        <EntryForm action={saveEntry.bind(null, cfg.kind)} kind={cfg.kind} submitLabel="Lưu" images={images} />
+        <EntryForm key={saved} action={saveEntry.bind(null, cfg.kind)} kind={cfg.kind} submitLabel="Lưu" images={images} />
       </div>
     </div>
   );

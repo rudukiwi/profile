@@ -60,6 +60,7 @@ export async function saveEntry(kind: "project" | "game", fd: FormData) {
   const { error } = await sb.from("entries").insert({ kind, ...f, slug: `${slugify(f.title)}-${Math.random().toString(36).slice(2, 6)}`, cover_url });
   if (error) throw new Error(error.message);
   refresh();
+  redirect(`${kind === "game" ? "/admin/games" : "/admin/projects"}?saved=${Date.now()}`);
 }
 
 export async function updateEntry(id: string, kind: "project" | "game", fd: FormData) {

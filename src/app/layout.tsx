@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
+import { Playfair_Display, Be_Vietnam_Pro, Patrick_Hand } from "next/font/google";
 import "./globals.css";
 import SiteHeader from "@/components/SiteHeader";
 
-const head = {variable:""};
-const display = {variable:""};
-const hand = {variable:""};
+const head = Playfair_Display({ subsets: ["latin", "latin-ext", "vietnamese"], variable: "--font-head" });
+const display = Be_Vietnam_Pro({ subsets: ["latin", "latin-ext", "vietnamese"], weight: ["300", "400", "500", "600"], variable: "--font-display" });
+const hand = Patrick_Hand({ subsets: ["latin", "latin-ext", "vietnamese"], weight: "400", variable: "--font-hand" });
 
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
 export const metadata: Metadata = {
