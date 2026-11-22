@@ -1,0 +1,25 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Phong cách Marginalia: giấy sáng, mực than, bút xanh tím. Chế độ tối là "trang đêm". */
+:root { --ground: 236 235 231; --raise: 246 245 241; --line: 208 206 198; --paper: 36 36 38; --mute: 110 110 116; --signal: 98 106 224; --pen: 125 132 239; color-scheme: light; }
+:root[data-theme="dark"] { --ground: 43 43 46; --raise: 54 54 58; --line: 78 78 84; --paper: 236 235 231; --mute: 160 160 168; --signal: 150 157 255; --pen: 125 132 239; color-scheme: dark; }
+body { @apply bg-ground text-paper font-display antialiased; font-weight: 400; font-size: 1rem; line-height: 1.7;
+  background-image: radial-gradient(rgb(var(--paper) / .06) 1px, transparent 1px); background-size: 14px 14px; }
+h1, h2, h3 { font-weight: 400 !important; font-family: var(--font-head), Georgia, serif; font-weight: 400; letter-spacing: -0.01em; }
+.hand { font-family: var(--font-hand), cursive; color: rgb(var(--pen)); }
+/* nét gạch chân vẽ tay dưới tiêu đề */
+.scribble { position: relative; display: inline-block; }
+.scribble::after { content: ""; position: absolute; left: 0; right: 0; bottom: -.18em; height: .32em; background: rgb(var(--pen));
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 C30 3 60 10 100 6 S170 4 198 7' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat;
+  mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 12' preserveAspectRatio='none'%3E%3Cpath d='M2 8 C30 3 60 10 100 6 S170 4 198 7' fill='none' stroke='black' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/100% 100% no-repeat; }
+:focus-visible { outline: 2px solid rgb(var(--signal)); outline-offset: 3px; border-radius: 4px; }
+.field { @apply w-full rounded-md border border-line bg-raise px-3 py-2 text-paper font-display text-sm; }
+.btn { @apply inline-flex items-center rounded-full bg-paper px-5 py-2 font-display text-sm font-medium text-ground transition hover:-translate-y-0.5 hover:shadow-md; }
+.btn:hover { background: rgb(var(--signal)); color: #fff; }
+.btn-ghost { @apply inline-flex items-center rounded-full border border-paper/40 px-5 py-2 font-display text-sm text-paper transition hover:-translate-y-0.5 hover:border-signal hover:text-signal; }
+.card { @apply rounded-2xl border border-line bg-raise p-6 transition hover:-translate-y-0.5 hover:shadow-md; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.rise { animation: rise .7s cubic-bezier(.2,.7,.2,1) both; }
+@media (prefers-reduced-motion: reduce) { .rise { animation: none; } * { transition: none !important; } }
