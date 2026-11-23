@@ -20,6 +20,13 @@ export default async function ProfilePage() {
         <input name="name" required defaultValue={p?.name} placeholder="Họ tên" className="field" />
         <input name="headline" defaultValue={p?.headline} placeholder="Chức danh" className="field" />
         <textarea name="bio" rows={5} defaultValue={p?.bio} placeholder="Giới thiệu ngắn" className="field" />
+        <details className="rounded-md border border-line p-3" open={Boolean(p?.headline_en || p?.bio_en)}>
+          <summary className="cursor-pointer font-display text-sm text-mute">Bản tiếng Anh (không bắt buộc)</summary>
+          <div className="mt-3 space-y-3">
+            <input name="headline_en" defaultValue={p?.headline_en ?? ""} placeholder="Headline (English)" className="field" />
+            <textarea name="bio_en" rows={5} defaultValue={p?.bio_en ?? ""} placeholder="Short bio (English)" className="field" />
+          </div>
+        </details>
         <label className="block font-display text-sm text-mute">Ảnh chân dung (JPG/PNG/WebP, tối đa 5MB)
           <input name="avatar" type="file" accept="image/jpeg,image/png,image/webp" className="mt-1 block w-full" />
         </label>

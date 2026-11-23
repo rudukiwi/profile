@@ -74,7 +74,23 @@ export type MgnFact = { doodle: MgnDoodle; text: string }
 export type MgnLink = { label: string; href: string }
 export type MgnSection = "cover" | "hello" | "education" | "skills" | "projects" | "cases" | "facts" | "thanks"
 
+export type MgnLabels = {
+  scroll: string; education: string; scanMe: string; openCv: string; languages: string; skills: string; toolkit: string
+  projects: string; challenge: string; seeCase: string; facts: string; copy: string; copied: string; close: string; contents: string
+  sections: { [k: string]: string }
+}
+const DEFAULT_LABELS: MgnLabels = {
+  scroll: "scroll", education: "Experience", scanMe: "scan me", openCv: "Open my CV: ", languages: "Languages", skills: "Skills",
+  toolkit: "there's plenty more in my toolkit", projects: "Projects.", challenge: "my challenge:", seeCase: "see the full case study",
+  facts: "Fun Facts", copy: "Copy ", copied: "copied!", close: "close ×", contents: "Contents",
+  sections: { cover: "cover", hello: "hello", education: "experience", skills: "skills", projects: "projects", cases: "case studies", facts: "fun facts", thanks: "thank you" },
+}
+const LabelsCtx = React.createContext<MgnLabels>(DEFAULT_LABELS)
+const useL = () => React.useContext(LabelsCtx)
+
 export type MarginaliaPortfolioTemplateProps = {
+  /** UI words (default English). */
+  labels?: Partial<MgnLabels>
   name?: string
   role?: string
   year?: string
@@ -1481,6 +1497,7 @@ const ORBIT_TILT = (-18 * Math.PI) / 180
 function Cover({ info, title, name, role, year, location, docLabel, inkTrail }: {
   info: SheetInfo; title: string; name: string; role: string; year: string; location: string; docLabel: string; inkTrail: boolean
 }) {
+  const L = useL()
   const chars = Array.from(title)
   let orbitAt = title.toLowerCase().lastIndexOf("o")
   if (orbitAt < 0) orbitAt = chars.length - 1
@@ -1601,7 +1618,7 @@ function Cover({ info, title, name, role, year, location, docLabel, inkTrail }: 
           {location} — {year}
         </span>
         <span className="mgn-hint" aria-hidden="true">
-          scroll
+          {L.scroll}
           <svg viewBox="0 0 22 40" className="mgn-ink">
             <path d="M11 2c-6 6 6 10 0 16s6 10 0 18" />
             <path d="M5 31l6 7 6-7" />
@@ -1673,11 +1690,12 @@ function Hello({ info, portrait, traits, greeting, bio, name }: {
 function Education({ info, intro, education, cvUrl, cvNote, languages }: {
   info: SheetInfo; intro: string; education: MgnEducation[]; cvUrl: string | null; cvNote: string; languages: MgnLanguage[]
 }) {
+  const L = useL()
   return (
     <Sheet info={info}>
       <div className="mgn-edu">
         <div>
-          <Heading text="Experience" seed={11} />
+          <Heading text={L.education} seed={11} />
           {intro && (
             <p className="mgn-p mgn-edu-intro mgn-muted" data-rise>
               {intro}
@@ -1706,9 +1724,9 @@ function Education({ info, intro, education, cvUrl, cvNote, languages }: {
         <div>
           {cvUrl && (
             <div className="mgn-qr-wrap" data-ink>
-              <a className="mgn-qr" href={cvUrl} target="_blank" rel="noreferrer" aria-label={"Open my CV: " + cvUrl}>
+              <a className="mgn-qr" href={cvUrl} target="_blank" rel="noreferrer" aria-label={L.openCv + cvUrl}>
                 <span className="mgn-qr-tag">
-                  <span className="mgn-write">scan me</span>
+                  <span className="mgn-write">{L.scanMe}</span>
                 </span>
                 <QRCode text={cvUrl} />
               </a>
@@ -1722,7 +1740,7 @@ function Education({ info, intro, education, cvUrl, cvNote, languages }: {
           )}
           {languages.length > 0 && (
             <div className="mgn-langs" data-ink>
-              <h3>Languages</h3>
+              <h3>{L.languages}</h3>
               {languages.map((l, i) => (
                 <div className="mgn-lang" key={i}>
                   <b>{l.name}</b>
@@ -1744,6 +1762,7 @@ function Education({ info, intro, education, cvUrl, cvNote, languages }: {
 function Skills({ info, tools, toolNote, intro, skills, books, booksNote }: {
   info: SheetInfo; tools: MgnTool[]; toolNote: string; intro: string; skills: string[]; books: { title: string; color: string }[]; booksNote: string
 }) {
+  const L = useL()
   const [on, setOn] = React.useState(-1)
   const note = on >= 0 && tools[on] ? tools[on].name + (tools[on].note ? " — " + tools[on].note : "") : toolNote
   return (
@@ -1751,7 +1770,7 @@ function Skills({ info, tools, toolNote, intro, skills, books, booksNote }: {
       <div className="mgn-skills">
         <div className="mgn-skills-top">
           <div>
-            <Heading text="Skills" seed={12} />
+            <Heading text={L.skills} seed={12} />
             <div className="mgn-tools" data-ink onPointerLeave={() => setOn(-1)}>
               {tools.map((t, i) => (
                 <button
@@ -1795,7 +1814,7 @@ function Skills({ info, tools, toolNote, intro, skills, books, booksNote }: {
             </p>
             <div className="mgn-more mgn-hand" data-ink>
               <Doodle kind="pencil" />
-              <span className="mgn-write">there's plenty more in my toolkit</span>
+              <span className="mgn-write">{L.toolkit}</span>
             </div>
           </div>
           <ul className="mgn-skill-list" data-rise>
@@ -1810,11 +1829,12 @@ function Skills({ info, tools, toolNote, intro, skills, books, booksNote }: {
 }
 
 function Deal({ info, projects, note, onOpen }: { info: SheetInfo; projects: MgnProject[]; note: string; onOpen: (i: number) => void }) {
+  const L = useL()
   return (
     <Sheet info={info} className="mgn-deal">
       <div className="mgn-deal-stage">
         <div className="mgn-deal-head">
-          <Heading text="Projects." seed={14} />
+          <Heading text={L.projects} seed={14} />
           {note && (
             <div className="mgn-deal-note mgn-hand" data-ink>
               <span className="mgn-write">{note}</span>
@@ -1852,6 +1872,7 @@ function Deal({ info, projects, note, onOpen }: { info: SheetInfo; projects: Mgn
 }
 
 function Case({ info, p, i, flip }: { info: SheetInfo; p: MgnProject; i: number; flip: boolean }) {
+  const L = useL()
   const kinds = p.screens && p.screens.length ? p.screens : (["feed", "cover", "detail"] as MgnScreen[])
   const trio = [kinds[0], kinds[1] || kinds[0], kinds[2] || kinds[0]]
   const meta = [p.kind, p.year].filter(Boolean).join(", ")
@@ -1872,7 +1893,7 @@ function Case({ info, p, i, flip }: { info: SheetInfo; p: MgnProject; i: number;
           {p.challenge && (
             <div className="mgn-challenge" data-ink>
               <span className="mgn-challenge-l mgn-hand mgn-mk">
-                <span className="mgn-write">my challenge:</span>
+                <span className="mgn-write">{L.challenge}</span>
                 <PenMark kind="oval" seed={60 + i} padX={4} padY={4} />
               </span>
               <span className="mgn-challenge-t">{p.challenge}</span>
@@ -1896,7 +1917,7 @@ function Case({ info, p, i, flip }: { info: SheetInfo; p: MgnProject; i: number;
           )}
           {p.href && (
             <a className="mgn-visit" href={p.href} target="_blank" rel="noreferrer">
-              see the full case study
+              {L.seeCase}
               <svg viewBox="0 0 34 16" className="mgn-ink" aria-hidden="true">
                 <path d="M2 9c8-3 18-3 29-1" />
                 <path d="M25 3l6 5-6 5" />
@@ -1923,6 +1944,7 @@ function Case({ info, p, i, flip }: { info: SheetInfo; p: MgnProject; i: number;
 }
 
 function Facts({ info, facts, note }: { info: SheetInfo; facts: MgnFact[]; note: string }) {
+  const L = useL()
   const redraw = (e: React.MouseEvent) => {
     if (reducedMotion()) return
     const paths = e.currentTarget.querySelectorAll(".mgn-draw")
@@ -1942,7 +1964,7 @@ function Facts({ info, facts, note }: { info: SheetInfo; facts: MgnFact[]; note:
           ) : (
             <span />
           )}
-          <Heading text="Fun Facts" seed={15} />
+          <Heading text={L.facts} seed={15} />
         </div>
         <div className="mgn-fact-grid">
           {facts.map((f, i) => (
@@ -1963,6 +1985,7 @@ function Thanks({ info, thanks, portrait, name, email, links, letter, signature,
   info: SheetInfo; thanks: string; portrait: string; name: string; email: string; links: MgnLink[]; letter: string
   signature: string; title: string; year: string; docLabel: string; onTop: () => void
 }) {
+  const L = useL()
   const [copied, setCopied] = React.useState(false)
   const timer = React.useRef(0)
   React.useEffect(() => () => window.clearTimeout(timer.current), [])
@@ -1993,11 +2016,11 @@ function Thanks({ info, thanks, portrait, name, email, links, letter, signature,
           {email && (
             <div className="mgn-touch">
               <b>Get in touch:</b>
-              <button className="mgn-email" onClick={copy} aria-label={"Copy " + email}>
+              <button className="mgn-email" onClick={copy} aria-label={L.copy + email}>
                 {email}
                 <PenMark kind="under" seed={81} padX={1} padY={7} />
                 <span className="mgn-copied" data-on={copied} aria-live="polite">
-                  {copied ? "copied!" : ""}
+                  {copied ? L.copied : ""}
                 </span>
               </button>
             </div>
@@ -2049,6 +2072,7 @@ function Chrome({ year, docLabel, name, items, secRef, onJump }: {
   year: string; docLabel: string; name: string; items: { id: string; label: string }[]
   secRef: React.MutableRefObject<HTMLSpanElement | null>; onJump: (id: string) => void
 }) {
+  const L = useL()
   const [open, setOpen] = React.useState(false)
   React.useEffect(() => {
     if (!open) return
@@ -2077,9 +2101,9 @@ function Chrome({ year, docLabel, name, items, secRef, onJump }: {
         </div>
       </div>
       <div className="mgn-hold">
-        <nav className="mgn-index" data-open={open} aria-hidden={!open} aria-label="Contents">
+        <nav className="mgn-index" data-open={open} aria-hidden={!open} aria-label={L.contents}>
           <button className="mgn-index-close" onClick={() => setOpen(false)} tabIndex={open ? 0 : -1}>
-            close ×
+            {L.close}
           </button>
           <ol style={{ "--rows": Math.ceil(items.length / 2) } as React.CSSProperties}>
             {items.map((it, i) => (
@@ -2116,6 +2140,7 @@ function cap(s: string): string {
 }
 
 export default function MarginaliaPortfolioTemplate(props: MarginaliaPortfolioTemplateProps) {
+  const L: MgnLabels = { ...DEFAULT_LABELS, ...props.labels, sections: { ...DEFAULT_LABELS.sections, ...(props.labels?.sections ?? {}) } }
   const {
     name = DEFAULTS.name,
     role = DEFAULTS.role,
@@ -2168,11 +2193,11 @@ export default function MarginaliaPortfolioTemplate(props: MarginaliaPortfolioTe
   for (const s of sections) {
     if (s === "cases") projects.forEach((p, i) => push("cases", "case-" + i, p.name.toLowerCase(), p.tone || (i % 2 === 0 ? "night" : "paper"), i))
     else if (s === "projects") {
-      if (projects.length) push(s, s, SECTION_LABEL[s], "night")
+      if (projects.length) push(s, s, L.sections[s], "night")
     } else if (s === "facts") {
-      if (facts.length) push(s, s, SECTION_LABEL[s], "night")
+      if (facts.length) push(s, s, L.sections[s], "night")
     }
-    else push(s, s, SECTION_LABEL[s] || s, "paper")
+    else push(s, s, L.sections[s] || s, "paper")
   }
   const animKey = sheets.map((s) => s.info.id + s.info.tone).join("|") + "|" + traits.length + "|" + facts.length
 
@@ -2409,6 +2434,7 @@ export default function MarginaliaPortfolioTemplate(props: MarginaliaPortfolioTe
   let caseN = 0
 
   return (
+    <LabelsCtx.Provider value={L}>
     <div ref={rootRef} className={"mgn-root" + (className ? " " + className : "")} style={style}>
       {fontHref && <link rel="stylesheet" href={fontHref} />}
       <style>{CSS}</style>
@@ -2439,5 +2465,6 @@ export default function MarginaliaPortfolioTemplate(props: MarginaliaPortfolioTe
         }
       })}
     </div>
+    </LabelsCtx.Provider>
   )
 }

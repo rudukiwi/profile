@@ -8,6 +8,14 @@ export default function EntryForm({ action, kind, entry, submitLabel, images = [
       <input name="title" required defaultValue={entry?.title} placeholder="Tên" className="field" />
       <input name="summary" defaultValue={entry?.summary} placeholder="Mô tả ngắn" className="field" />
       <textarea name="body" rows={6} defaultValue={entry?.body} placeholder="Nội dung chi tiết" className="field" />
+      <details className="rounded-md border border-line p-3" open={Boolean(entry?.title_en || entry?.summary_en || entry?.body_en)}>
+        <summary className="cursor-pointer font-display text-sm text-mute">Bản tiếng Anh (không bắt buộc)</summary>
+        <div className="mt-3 space-y-3">
+          <input name="title_en" defaultValue={entry?.title_en ?? ""} placeholder="Title (English)" className="field" />
+          <input name="summary_en" defaultValue={entry?.summary_en ?? ""} placeholder="Short description (English)" className="field" />
+          <textarea name="body_en" rows={5} defaultValue={entry?.body_en ?? ""} placeholder="Details (English)" className="field" />
+        </div>
+      </details>
       <input name="tech" defaultValue={entry?.tech.join(", ")} placeholder="Công nghệ, cách nhau bằng dấu phẩy" className="field" />
       <input name="link_url" type="url" defaultValue={entry?.link_url ?? ""} placeholder={kind === "game" ? "Link chơi / tải game" : "Link demo"} className="field" />
       <input name="repo_url" type="url" defaultValue={entry?.repo_url ?? ""} placeholder="Link GitHub" className="field" />

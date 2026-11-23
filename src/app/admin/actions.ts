@@ -29,7 +29,12 @@ async function pickCover(sb: SB, kind: string, fd: FormData) {
   return data ? pick : null; // chỉ nhận ảnh có trong thư viện
 }
 
+// Chỉ gửi các cột tiếng Anh khi có nội dung, để vẫn lưu được nếu chưa chạy 009_english.sql
+const enFields = (fd: FormData, keys: string[]) =>
+  Object.fromEntries(keys.map((k) => [k, text(fd, k)]).filter(([, v]) => v));
+
 const entryFields = (fd: FormData) => ({
+  ...enFields(fd, ["title_en", "summary_en", "body_en"]),
   title: text(fd, "title"),
   summary: text(fd, "summary"),
   body: text(fd, "body"),
@@ -93,6 +98,7 @@ export async function saveProfile(fd: FormData) {
   const avatar = await upload(sb, "avatar", fd.get("avatar") as File | null, IMG, 5);
   const { error } = await sb.from("profile").update({
     ...(avatar ? { avatar_url: avatar } : {}),
+    ...enFields(fd, ["headline_en", "bio_en"]),
     name: text(fd, "name"), headline: text(fd, "headline"), bio: text(fd, "bio"),
     email: text(fd, "email") || null, github_url: text(fd, "github_url") || null, linkedin_url: text(fd, "linkedin_url") || null,
   }).eq("id", 1);

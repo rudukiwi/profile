@@ -1,10 +1,12 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import { submitMessage } from "./actions";
 import type { Profile } from "@/lib/types";
+import { getLang, T } from "@/lib/i18n";
 
-export const metadata = { title: "Liên hệ" };
+export async function generateMetadata() { return { title: T[await getLang()].contact }; }
 
 export default async function Contact({ searchParams }: { searchParams: Promise<{ sent?: string; error?: string }> }) {
+  const t = T[await getLang()];
   const { sent, error } = await searchParams;
   const sb = await supabaseServer();
   const { data } = await sb.from("profile").select("email, github_url, linkedin_url").eq("id", 1).maybeSingle();
@@ -12,17 +14,17 @@ export default async function Contact({ searchParams }: { searchParams: Promise<
   const p = data as Pick<Profile, "email" | "github_url" | "linkedin_url"> | null;
   return (
     <main className="mx-auto max-w-3xl px-6 pb-24 pt-12">
-      <h1 className="text-5xl"><span className="scribble">Liên hệ</span></h1>
-      <p className="mt-4 text-xl text-paper/80">Cho mình biết bạn cần gì. Mình sẽ trả lời qua email.</p>
-      {sent && <p role="status" className="mt-8 rounded-md border border-signal px-4 py-3 font-display text-signal">Đã gửi tin nhắn. Cảm ơn bạn.</p>}
-      {error === "invalid" && <p role="alert" className="mt-8 font-display text-red-400">Vui lòng nhập tên, email hợp lệ và tin nhắn từ 10 ký tự.</p>}
-      {error === "server" && <p role="alert" className="mt-8 font-display text-red-400">Chưa gửi được tin nhắn. Vui lòng thử lại sau hoặc gửi email trực tiếp.</p>}
+      <h1 className="text-5xl"><span className="scribble">{t.contact}</span></h1>
+      <p className="mt-4 text-xl text-paper/80">{t.contactLead}</p>
+      {sent && <p role="status" className="mt-8 rounded-md border border-signal px-4 py-3 font-display text-signal">{t.sent}</p>}
+      {error === "invalid" && <p role="alert" className="mt-8 font-display text-red-400">{t.errInvalid}</p>}
+      {error === "server" && <p role="alert" className="mt-8 font-display text-red-400">{t.errServer}</p>}
       <form action={submitMessage} className="mt-8 max-w-xl space-y-3">
-        <input name="name" required maxLength={100} placeholder="Họ tên" className="field" autoComplete="name" />
-        <input name="email" type="email" required placeholder="Email" className="field" autoComplete="email" />
-        <textarea name="message" required minLength={10} maxLength={3000} rows={6} placeholder="Tin nhắn" className="field" />
+        <input name="name" required maxLength={100} placeholder={t.name} className="field" autoComplete="name" />
+        <input name="email" type="email" required placeholder={t.email} className="field" autoComplete="email" />
+        <textarea name="message" required minLength={10} maxLength={3000} rows={6} placeholder={t.message} className="field" />
         <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="absolute -left-[9999px]" />
-        <button className="btn">Gửi tin nhắn</button>
+        <button className="btn">{t.send}</button>
       </form>
       <div className="mt-12 flex flex-wrap gap-x-6 gap-y-2 font-display">
         {p?.email && <a className="text-signal" href={`mailto:${p.email}`}>{p.email}</a>}

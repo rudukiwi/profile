@@ -3,7 +3,7 @@
 ## 1. Cài đặt
 1. Cài Node.js 20 trở lên (https://nodejs.org), kiểm tra: `node -v`
 2. `npm install`
-3. Supabase: tạo project, vào SQL Editor chạy lần lượt: `supabase/schema.sql`, `002_experience_certificates.sql`, `003_media.sql`, `004_messages.sql`, `005_social_ratelimit.sql`, `006_cv_versions.sql`, `007_avatar.sql`, `008_grants.sql` (008 chỉ cần khi báo "permission denied for table")
+3. Supabase: tạo project, vào SQL Editor chạy lần lượt: `supabase/schema.sql`, `002_experience_certificates.sql`, `003_media.sql`, `004_messages.sql`, `005_social_ratelimit.sql`, `006_cv_versions.sql`, `007_avatar.sql`, `008_grants.sql` (chỉ cần khi báo "permission denied for table"), `009_english.sql` (nội dung tiếng Anh)
 4. Authentication > Users > Add user (email và mật khẩu của bạn). Authentication > Sign In / Providers: tắt "Allow new users to sign up".
 5. Chạy trong SQL Editor (thay email): `insert into admins (user_id) select id from auth.users where email = 'you@example.com';`
 6. Copy `.env.example` thành `.env.local`, điền 3 biến (URL và anon key lấy ở Project Settings > API).

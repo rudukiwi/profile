@@ -1,7 +1,8 @@
 import { supabaseServer } from "@/lib/supabase/server";
 import type { Certificate, Entry, Experience, Profile, Skill } from "@/lib/types";
 import { fmtMonth } from "@/lib/format";
-import MarginaliaPortfolioTemplate, { type MgnProject, type MgnSection } from "@/components/ui/marginalia-portfolio-template";
+import { getLang, pick, T } from "@/lib/i18n";
+import MarginaliaPortfolioTemplate, { type MgnLabels, type MgnProject, type MgnSection } from "@/components/ui/marginalia-portfolio-template";
 
 export const revalidate = 60;
 
@@ -14,6 +15,8 @@ const placeholder = (t: string, c: string) =>
     `<svg xmlns="http://www.w3.org/2000/svg" width="520" height="1040"><rect width="100%" height="100%" fill="${c}"/><text x="50%" y="50%" fill="#fff" font-family="sans-serif" font-size="56" text-anchor="middle">${t.replace(/[<&]/g, "")}</text></svg>`);
 
 export default async function Home() {
+  const lang = await getLang();
+  const t = T[lang];
   const sb = await supabaseServer();
   const [p, e, s, x, c, l, m] = await Promise.all([
     sb.from("profile").select("*").eq("id", 1).maybeSingle(),
@@ -37,23 +40,23 @@ export default async function Home() {
     const imgs = [...own, ...gallery.slice(i, i + 3)].slice(0, 3);
     const images = imgs.length ? imgs : [placeholder(en.title, hue(en.title))];
     return {
-      name: en.title,
-      tagline: en.summary.slice(0, 60),
-      kind: [en.kind === "game" ? "Game" : "Phần mềm", ...en.tech.slice(0, 2)].join(" · "),
+      name: pick(lang, en.title, en.title_en),
+      tagline: pick(lang, en.summary, en.summary_en).slice(0, 60),
+      kind: [en.kind === "game" ? t.game1 : t.software1, ...en.tech.slice(0, 2)].join(" · "),
       year: String(new Date(en.created_at).getFullYear()),
-      summary: en.summary || en.title,
-      challenge: en.tech.length ? `Công nghệ: ${en.tech.slice(0, 5).join(", ")}` : undefined,
+      summary: pick(lang, en.summary, en.summary_en) || pick(lang, en.title, en.title_en),
+      challenge: en.tech.length ? `${lang === "en" ? "Tech" : "Công nghệ"}: ${en.tech.slice(0, 5).join(", ")}` : undefined,
       images,
       screens: ["cover", "detail", "feed"],
       accent: hue(en.title),
-      tag: en.kind === "game" ? "game" : "web / app",
+      tag: en.kind === "game" ? "game" : t.webapp,
       href: `/work/${en.slug}`,
     };
   });
 
   const education = [
-    ...jobs.map((j) => ({ title: j.position, place: j.company, period: `${fmtMonth(j.start_date)} – ${fmtMonth(j.end_date)}`, circled: !j.end_date })),
-    ...certs.map((k) => ({ title: k.title, place: k.issuer, period: k.issued_on ? fmtMonth(k.issued_on) : undefined })),
+    ...jobs.map((j) => ({ title: j.position, place: j.company, period: `${fmtMonth(j.start_date, lang)} – ${fmtMonth(j.end_date, lang)}`, circled: !j.end_date })),
+    ...certs.map((k) => ({ title: k.title, place: k.issuer, period: k.issued_on ? fmtMonth(k.issued_on, lang) : undefined })),
   ].slice(0, 8);
 
   const names = skills.map((k) => k.name);
@@ -64,8 +67,8 @@ export default async function Home() {
     ...(profile?.github_url ? [{ label: "GitHub", href: profile.github_url }] : []),
     ...(profile?.linkedin_url ? [{ label: "LinkedIn", href: profile.linkedin_url }] : []),
     ...social.map((k) => ({ label: k.label, href: k.url })),
-    ...(cvRaw ? [{ label: "Tải CV", href: cvRaw }] : []),
-    { label: "Gửi tin nhắn", href: "/contact" },
+    ...(cvRaw ? [{ label: t.downloadCv, href: cvRaw }] : []),
+    { label: t.sendMessage, href: "/contact" },
   ];
   const sections: MgnSection[] = ["cover", "hello", ...(education.length ? ["education" as const] : []), "skills", ...(projects.length ? ["projects" as const, "cases" as const] : []), "thanks"];
   const name = profile?.name ?? "Your Name";
@@ -73,30 +76,32 @@ export default async function Home() {
   return (
     <MarginaliaPortfolioTemplate
       name={name}
-      role={profile?.headline ?? "Software & game developer"}
+      role={pick(lang, profile?.headline, profile?.headline_en) || t.headline}
       year={String(new Date().getFullYear())}
       title="Portfolio"
-      docLabel="Hồ sơ năng lực"
+      location={t.location}
+      labels={t.labels as unknown as MgnLabels}
+      docLabel={t.docLabel}
       portrait={profile?.avatar_url ?? placeholder(name.split(" ").map((w) => w[0]).slice(-2).join("").toUpperCase(), "#475569")}
       traits={names.slice(0, 6)}
-      greeting="Xin chào."
-      bio={profile?.bio || "Mình thiết kế và xây dựng phần mềm, web và game."}
-      educationIntro="Kinh nghiệm làm việc và chứng chỉ."
+      greeting={t.hello}
+      bio={pick(lang, profile?.bio, profile?.bio_en) || t.intro}
+      educationIntro={t.educationIntro}
       education={education}
       cvUrl={cvUrl}
-      cvNote="hồ sơ của mình"
+      cvNote={t.cvNote}
       languages={[]}
       tools={names.slice(0, 5).map((n) => ({ name: n, mark: mark(n), bg: hue(n), fg: "#ffffff" }))}
-      toolNote="rê chuột vào từng công nghệ"
-      skillsIntro="Thiết kế và xây dựng phần mềm, web và game, từ database đến giao diện."
+      toolNote={t.toolNote}
+      skillsIntro={t.skillsIntro}
       skills={names.slice(0, 12)}
       books={[]}
-      projectsNote="Các sản phẩm mình đã làm"
+      projectsNote={t.projectsNote}
       projects={projects}
-      thanks="Cảm ơn bạn"
+      thanks={t.thanks}
       email={email}
       links={links}
-      letter={`Cảm ơn bạn đã xem hồ sơ của mình.\n\nNếu bạn có dự án phần mềm, web hay game cần người cùng làm, mình rất muốn nghe ý tưởng của bạn.`}
+      letter={t.letter}
       sections={sections}
     />
   );
