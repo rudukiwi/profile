@@ -8,7 +8,7 @@ import { T, type Lang } from "@/lib/i18n-strings";
 function LangSwitch({ lang }: { lang: Lang }) {
   return (
     <span className="inline-flex items-center gap-1" role="group" aria-label="Language">
-      {(["vi", "en"] as const).map((l, i) => (
+      {(["en", "vi"] as const).map((l, i) => (
         <form key={l} action={setLang.bind(null, l)} className="inline-flex items-center gap-1">
           {i > 0 && <span aria-hidden="true">/</span>}
           <button className={lang === l ? "font-semibold text-signal" : "hover:text-signal"} aria-pressed={lang === l}>{l.toUpperCase()}</button>

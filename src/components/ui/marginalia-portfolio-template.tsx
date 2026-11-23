@@ -754,7 +754,7 @@ const CSS = `
 
 .mgn-split{display:inline}
 .mgn-w{display:inline-block;white-space:nowrap}
-.mgn-c{display:inline-block;overflow:hidden;padding:.06em .01em .12em;margin:-.06em -.01em -.12em}
+.mgn-c{display:inline-block;overflow:hidden;padding:.06em .1em .12em;margin:-.06em -.1em -.12em}
 .mgn-ci{display:inline-block;will-change:transform}
 
 .mgn-hd{position:relative;display:inline-block}
@@ -787,7 +787,7 @@ const CSS = `
 .mgn-cover-in{position:relative;display:flex;flex-direction:column;align-items:center}
 .mgn-title{display:flex;white-space:nowrap;font-size:clamp(78px,21.5cqi,370px);color:var(--fg);margin:0;position:relative;z-index:1}
 .mgn-l{position:relative;display:inline-block;will-change:transform}
-.mgn-lc{display:inline-block;overflow:hidden;padding:.08em .015em .16em;margin:-.08em -.015em -.16em}
+.mgn-lc{display:inline-block;overflow:hidden;padding:.08em .16em .16em;margin:-.08em -.16em -.16em}
 .mgn-li{display:inline-block}
 .mgn-orbit{position:absolute;left:50%;top:52%;width:0;height:0;pointer-events:none}
 .mgn-orbit svg{position:absolute;overflow:visible;left:0;top:0}
