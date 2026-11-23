@@ -1,4 +1,5 @@
 import type { Entry, Media } from "@/lib/types";
+import ImageInput from "@/components/ImageInput";
 
 type Props = { action: (fd: FormData) => void | Promise<void>; kind: "project" | "game"; entry?: Entry; submitLabel: string; images?: Pick<Media, "id" | "url" | "title">[] };
 
@@ -20,8 +21,8 @@ export default function EntryForm({ action, kind, entry, submitLabel, images = [
       <input name="link_url" type="url" defaultValue={entry?.link_url ?? ""} placeholder={kind === "game" ? "Link chơi / tải game" : "Link demo"} className="field" />
       <input name="repo_url" type="url" defaultValue={entry?.repo_url ?? ""} placeholder="Link GitHub" className="field" />
       <label className="block font-display text-sm text-mute">
-        Ảnh bìa (JPG, PNG, WebP, tối đa 5MB){entry?.cover_url && ". Chọn ảnh mới để thay thế"}
-        <input name="cover" type="file" accept="image/jpeg,image/png,image/webp" className="mt-1 block w-full" />
+        Ảnh bìa (JPG, PNG, WebP, ảnh lớn sẽ tự thu nhỏ){entry?.cover_url && ". Chọn ảnh mới để thay thế"}
+        <ImageInput name="cover" className="mt-1 block w-full" />
       </label>
       {images.length > 0 && (
         <details className="rounded-md border border-line p-3">
@@ -37,7 +38,7 @@ export default function EntryForm({ action, kind, entry, submitLabel, images = [
           <p className="mt-2 font-display text-xs text-mute">Nếu bạn cũng tải ảnh lên ở trên, ảnh tải lên sẽ được dùng.</p>
         </details>
       )}
-      <select name="status" className="field" defaultValue={entry?.status ?? "draft"}>
+      <select name="status" className="field" defaultValue={entry?.status ?? "published"}>
         <option value="draft">Bản nháp</option>
         <option value="published">Xuất bản</option>
       </select>

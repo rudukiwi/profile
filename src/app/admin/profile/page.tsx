@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabase/server";
+import ImageInput from "@/components/ImageInput";
 import { removeCv, saveProfile, setActiveCv, uploadCv } from "../actions";
 import ConfirmButton from "@/components/ConfirmButton";
 import type { Profile } from "@/lib/types";
@@ -27,8 +28,8 @@ export default async function ProfilePage() {
             <textarea name="bio_en" rows={5} defaultValue={p?.bio_en ?? ""} placeholder="Short bio (English)" className="field" />
           </div>
         </details>
-        <label className="block font-display text-sm text-mute">Ảnh chân dung (JPG/PNG/WebP, tối đa 5MB)
-          <input name="avatar" type="file" accept="image/jpeg,image/png,image/webp" className="mt-1 block w-full" />
+        <label className="block font-display text-sm text-mute">Ảnh chân dung (JPG/PNG/WebP, ảnh lớn sẽ tự thu nhỏ)
+          <ImageInput name="avatar" className="mt-1 block w-full" />
         </label>
         {p?.avatar_url && <img src={p.avatar_url} alt="Ảnh hiện tại" className="h-24 w-24 rounded-md object-cover" />}
         <input name="email" type="email" defaultValue={p?.email ?? ""} placeholder="Email liên hệ" className="field" />
@@ -41,7 +42,7 @@ export default async function ProfilePage() {
           <h2 className="text-xl font-semibold">Tải CV mới</h2>
           <input name="label" placeholder="Tên phiên bản (vd: CV 2026 tiếng Việt)" className="field" />
           <input name="cv" type="file" accept="application/pdf" required className="block w-full font-display text-sm" />
-          <p className="font-display text-sm text-mute">PDF, tối đa 10MB. CV mới tải lên sẽ được dùng ngay.</p>
+          <p className="font-display text-sm text-mute">PDF, tối đa 4MB. CV mới tải lên sẽ được dùng ngay.</p>
           <button className="btn">Tải CV lên</button>
         </form>
         <section>

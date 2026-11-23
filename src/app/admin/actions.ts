@@ -65,7 +65,7 @@ export async function saveEntry(kind: "project" | "game", fd: FormData) {
   const { error } = await sb.from("entries").insert({ kind, ...f, slug: `${slugify(f.title)}-${Math.random().toString(36).slice(2, 6)}`, cover_url });
   if (error) throw new Error(error.message);
   refresh();
-  redirect(`${kind === "game" ? "/admin/games" : "/admin/projects"}?saved=${Date.now()}`);
+  redirect(`${kind === "game" ? "/admin/games" : "/admin/projects"}?saved=${f.status === "published" ? "published" : "draft"}-${Date.now()}`);
 }
 
 export async function updateEntry(id: string, kind: "project" | "game", fd: FormData) {
@@ -108,7 +108,7 @@ export async function saveProfile(fd: FormData) {
 
 export async function uploadCv(fd: FormData) {
   const sb = await supabaseServer();
-  const url = await upload(sb, "cv", fd.get("cv") as File | null, ["application/pdf"], 10);
+  const url = await upload(sb, "cv", fd.get("cv") as File | null, ["application/pdf"], 4);
   if (!url) return;
   const label = text(fd, "label") || `CV ${new Date().toLocaleDateString("vi-VN")}`;
   const ins = await sb.from("cv_versions").insert({ label, url, storage_path: url.split("/object/public/media/")[1] ?? null });

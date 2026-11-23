@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabase/server";
+import ImageInput from "@/components/ImageInput";
 import Link from "next/link";
 import { addCertificate, removeCertificate, updateCertificate } from "../actions";
 import ConfirmButton from "@/components/ConfirmButton";
@@ -38,8 +39,8 @@ export default async function CertificatesAdmin({ searchParams }: { searchParams
         <input name="issuer" required defaultValue={cur?.issuer} placeholder="Đơn vị cấp" className="field" />
         <label className="block font-display text-sm text-mute">Ngày cấp<input name="issued_on" type="date" defaultValue={cur?.issued_on ?? ""} className="field mt-1" /></label>
         <input name="credential_url" type="url" defaultValue={cur?.credential_url ?? ""} placeholder="Link xác minh (nếu có)" className="field" />
-        <label className="block font-display text-sm text-mute">Ảnh chứng chỉ (JPG, PNG, WebP, tối đa 5MB)
-          <input name="image" type="file" accept="image/jpeg,image/png,image/webp" className="mt-1 block w-full" />
+        <label className="block font-display text-sm text-mute">Ảnh chứng chỉ (JPG, PNG, WebP, ảnh lớn sẽ tự thu nhỏ)
+          <ImageInput name="image" className="mt-1 block w-full" />
         </label>
         <button className="btn">{cur ? "Lưu thay đổi" : "Thêm"}</button>
         {cur && <Link href="/admin/certificates" className="btn-ghost ml-2">Hủy</Link>}

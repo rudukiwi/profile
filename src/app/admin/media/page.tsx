@@ -1,4 +1,5 @@
 import { supabaseServer } from "@/lib/supabase/server";
+import ImageInput from "@/components/ImageInput";
 import Link from "next/link";
 import { addVideo, removeMedia, updateMedia, uploadMedia } from "../actions";
 import ConfirmButton from "@/components/ConfirmButton";
@@ -46,7 +47,7 @@ export default async function MediaAdmin({ searchParams }: { searchParams: Promi
         )}
         <form action={uploadMedia} className="space-y-3">
           <h2 className="text-xl font-semibold">Tải ảnh lên</h2>
-          <input name="files" type="file" multiple required accept="image/jpeg,image/png,image/webp" className="block w-full font-display text-sm" />
+          <ImageInput name="files" multiple required className="block w-full font-display text-sm" />
           <input name="category" placeholder="Nhóm (mặc định: Chung)" className="field" />
           <p className="font-display text-sm text-mute">Tối đa 20 ảnh mỗi lần, mỗi ảnh tối đa 5MB.</p>
           <button className="btn">Tải lên</button>

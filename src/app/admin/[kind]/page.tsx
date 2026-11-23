@@ -30,7 +30,7 @@ export default async function Manage({ params, searchParams }: Props) {
     <div className="grid gap-12 lg:grid-cols-[1fr_22rem]">
       <section>
         <h1 className="text-3xl font-semibold">{cfg.label}</h1>
-        {saved && <p role="status" className="mt-4 rounded-md border border-signal px-3 py-2 font-display text-sm text-signal">Đã lưu dưới dạng bản nháp. Bấm "Xuất bản" để hiện trên trang chủ.</p>}
+        {saved && <p role="status" className="mt-4 rounded-md border border-signal px-3 py-2 font-display text-sm text-signal">{saved.startsWith("published") ? "Đã lưu và xuất bản. Mục này đã hiện trên trang chủ (có thể chậm tới 1 phút)." : "Đã lưu dưới dạng bản nháp. Bấm \"Xuất bản\" bên dưới để hiện trên trang chủ."}</p>}
         <form className="mt-6 flex gap-2" role="search">
           <input name="q" defaultValue={q} placeholder="Tìm theo tên" className="field" />
           <select name="status" defaultValue={status} className="field !w-40">
